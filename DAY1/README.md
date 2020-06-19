@@ -1,21 +1,55 @@
-# day1
+序：
+本文为实训类题材文档，讲述如何一步步用初始化的vue-cli来创建一个页面。
 
-> A Vue.js project
+第一步：编写页面组件
+在 src/components 下创建 Home.vue 文件，然后编写如下代码：
+<template>
+  <section>
+    <div class="container">
+      <div class="title">
+        <img class="logo" :src="src" />
+        <h1>{{ title }}</h1>
+      </div>
+    </div>
+  </section>
+</template>
 
-## Build Setup
 
-``` bash
-# install dependencies
-npm install
+<script>
+export default {
+  name: "home",
+  data() {
+    return {
+      src: require('@/assets/image/my_logo.png'),
+      title: "VUE第一个小训练"
+    };
+  }
+};
+</script>
+<style src="@/assets/css/style.css"></style>
 
-# serve with hot reload at localhost:8080
-npm run dev
+第二步：接入路由
+找到 src/router/index.js 路由中将主页路由 / 所绑定的组件从默认的 HelloWorld 修改为刚才写好的 Home 组件：
+import Vue from 'vue';
+import Router from 'vue-router';
+import Home from '@/components/Home';
 
-# build for production with minification
-npm run build
+Vue.use(Router);
 
-# build for production and view the bundle analyzer report
-npm run build --report
-```
+export default new Router({
+  routes: [
+    {
+      path: '/',
+      name: 'Home',
+      component: Home,
+    },
+  ],
+});
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+第三步：结束总结
+data中的图片获取需要加require()：
+src: require('@/assets/image/my_logo.png')；
+vue-cli中还有个App.vue作为中转，内容为App.vue中的 <router-view>;
+main.js中的el，牵起了vue的右手，也就是页面，
+左手的资料：在Home.vue中的data里面；
+故：我们可以删除App.vue，直接将Home.vue与main.js连接，这样中间就少了一层逻辑。
