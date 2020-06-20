@@ -42,7 +42,7 @@ export default {
         },
         {
           type: "第一实训",
-          title: "新添运用methods、computed、v-on、v-if作一个页面",
+          title: "新添运用methods、computed、v-on、v-if,作个页面",
           link: "javascript:;"
         },
         {
