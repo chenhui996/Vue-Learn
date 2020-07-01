@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style_comm.css" />
+    <title>Contact</title>
+  </head>
+  <style>
+    #a_btn {
+      cursor: pointer;
+    }
+  </style>
+  <body>
+    <div id="app">
+      <section v-if="loading">
+        Loading...
+      </section>
+      <section v-else>
+        <div class="container">
+          <div class="title">
+            <div class="input" style="font-size: 0px;">
+              <input type="text" placeholder="Name" v-model.trim="input.name" />
+              <input
+                type="text"
+                placeholder="Email"
+                v-model.trim="input.email"
+              />
+              <button @click="submitHandler">送出</button>
+              <button @click="cancelHandler">取消</button>
+            </div>
+            <div class="menu">
+              <div class="menuItem" v-for="(item,index) in contacts">
+                <span class="number">{{item.id}}</span>
+                <span class="type">{{item.name}}</span>
+                <a href="'mailto:'+item.email" target="vue-iron" class="title"
+                  >{{item.email}}</a
+                >
+                <span id="a_btn" class="edit" @click="editHandler(index)"
+                  >修改</span
+                >
+                <span id="a_btn" class="delete" @click="deleteHandler(index)"
+                  >删除</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.js"></script>
+    <script src="https://cdn.staticfile.org/axios/0.19.2/axios.js"></script>
+    <script>
+      (function (Vue) {
+        new Vue({
+          el: "#app",
+          data: {
+            contacts: [],
+            editIndex: null,
+            input: {
+              name: "",
+              email: "",
+            },
+            loading: true,
+          },
+          methods: {
+            submitHandler() {
+              let { name, email } = this.input;
+              if (!name || !email) {
+                return;
+              }
+              if (this.editIndex === null) {
+                this.loading = true;
+                //post
+                axios
+                  .post("http://localhost:8888/content", this.input)
+                  .then((res) => {
+                    this.contacts.push(res.data);
+                    this.cancelHandler();
+                    this.loading = false;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              } 
+              else {
+                // put
+                axios
+                  .put(
+                    "http://localhost:8888/content/" + (this.editIndex + 1),
+                    this.input
+                  )
+                  .then((res) => {
+                    this.contacts[this.editIndex] = res.data;
+                    this.cancelHandler();
+                    this.loading = false;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+            },
+            cancelHandler() {
+              this.editIndex = null;
+              this.input.name = "";
+              this.input.email = "";
+            },
+            deleteHandler(index) {
+              let target = this.contacts[index];
+              if (confirm(`是否删除 ${target.name} ?`)) {
+                this.loading = true;
+                // delete
+                axios
+                  .delete("http://localhost:8888/content/" + target.id)
+                  .then((res) => {
+                    //   contacts.filter(item => item.id !== res);
+                    this.contacts.splice(index, 1);
+                    this.cancelHandler();
+                    this.loading = false;
+                  })
+                  .catch((err) => {
+                    console.log(err);
+                  });
+              }
+            },
+            editHandler(index) {
+              // edit，增删改查中，最复杂的功能
+              console.log(index);
+              this.editIndex = index;
+              this.input.name = this.contacts[index].name;
+              this.input.email = this.contacts[index].email;
+            },
+          },
+          mounted() {
+            this.loading = true;
+            // get
+            axios
+              .get("http://localhost:8888/content")
+              .then((res) => {
+                this.contacts = res.data;
+                this.loading = false;
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          },
+        });
+      })(Vue);
+    </script>
+  </body>
+</html>

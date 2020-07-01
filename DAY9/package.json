@@ -1,0 +1,17 @@
+{
+  "name": "day10",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "json": "json-server --watch db.json --port 8888",
+    "dev": "./node_modules/.bin/live-server --port=8001"
+  },
+  "author": "cain",
+  "license": "MIT",
+  "dependencies": {
+    "json-server": "^0.16.1"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

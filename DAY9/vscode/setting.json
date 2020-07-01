@@ -1,0 +1,10 @@
+{
+    "liveServer.setting.port":8080,
+    "liveServer.setting.ignoreFiles":[
+        ".vscode/**",
+        "**/*.scss",
+        "**/*.sass",
+        "**/*.ts",
+        "**/*.json"
+    ]
+}
