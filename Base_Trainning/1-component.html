@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  </head>
+  <body>
+    <div id="App"></div>
+  </body>
+  <script>
+      // 局部注册的组件
+      // 注意：局部注册的组件，只在注册的组件内用
+    const ComponentB = {
+      template: `<div>This is Component-B</div>`,
+    };
+
+    Vue.component("ComponentA", {
+      components: {
+        ComponentB: ComponentB, // 在这里注册了组件
+      },
+      data(){
+          return {
+            count:0
+          }
+      },
+      methods: {
+        handleClick(){
+            this.count++;
+        }
+      },
+      template: `
+            <div>
+                <hr>
+
+                ComponentA {{count}}
+                <button @click="handleClick">+</button>
+                <p>这个是强行手写的文本</p>
+
+                <hr>
+
+                <ComponentB></ComponentB> 
+                <p>这个是外部定义的ComponentB，我们只是引用进来了</p>
+
+                <hr>
+            </div>
+        `,
+    });
+    let app = new Vue({
+      el: "#App",
+      data: {
+        msg: "Hello World",
+        nice: "look this"
+      },
+      template: `
+            <div>{{msg}}
+                <ComponentA></ComponentA>
+                <ComponentA></ComponentA>
+            </div>
+        `,
+    });
+  </script>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script> -->
+  </head>
+  <body>
+    <div id="App"></div>
+  </body>
+  <script>
+    Vue.component("ComponentA", {
+      model: {
+        prop: "cain",
+        event: "change",
+      },
+      props: {
+        cain: "",
+      },
+      data() {
+        return {
+          count: 0,
+        };
+      },
+      methods: {
+        handleClick() {
+          this.count++;
+        //   this.$emit("input", this.count);
+        this.$emit("change", this.count);
+        },
+      },
+      template: `
+            <div>
+                ComponentA 
+                <hr>
+                这是原始的count：{{count}} 
+                <hr>
+                这是v-model要用到的value：{{cain}}
+                <button @click="handleClick">点击后，会用emit传出count的值，然后外面的父组件会接收到</button>
+
+                <hr>
+            </div>
+        `,
+    });
+    let app = new Vue({
+      el: "#App",
+      data: {
+        msg: "Hello World",
+        nice: "look this",
+        countEmit: 0,
+      },
+      template: `
+            <div>
+                {{msg}} 
+                <hr>
+                这是在父组件中接收到的count： {{countEmit}}
+                <hr>
+                <ComponentA v-model="countEmit"></ComponentA>
+            </div>
+        `,
+    });
+  </script>
+</html>

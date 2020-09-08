@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  </head>
+  <body>
+    <div id="App"></div>
+  </body>
+  <script>
+    Vue.component("ComponentA", {
+      data() {
+        return {
+          childCount: 0,
+        };
+      },
+      methods: {
+        handleClick() {
+          this.childCount++;
+        },
+      },
+      template: `
+            <div>
+                <hr>
+
+                ComponentA {{childCount}}
+                <div>
+                  <slot name="header" :countEmit="childCount">没在组件引用处给slot值，请检查</slot>
+                </div>
+                <div>
+                  <slot name="default">没在组件引用处给slot值，请检查</slot>
+                </div>
+                <div>
+                  <slot name="footer">没在组件引用处给slot值，请检查</slot>
+                </div>
+                <button @click="handleClick">+</button>
+                <p>这个是强行手写的文本</p>
+
+                <hr>
+            </div>
+        `,
+    });
+    let app = new Vue({
+      el: "#App",
+      data: {
+        msg: "Hello World",
+        nice: "look this",
+      },
+      template: `
+            <div>{{msg}}
+                <ComponentA>
+                  <template v-slot:header="data">作用域插槽：{{data.countEmit}}</template>
+                  <template v-slot:default>default - slot</template>
+                  <template v-slot:footer>footer - slot</template>
+                  </ComponentA>
+            </div>
+        `,
+    });
+  </script>
+</html>

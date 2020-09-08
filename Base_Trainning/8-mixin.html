@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12"></script>
+  </head>
+  <body>
+    <div id="App"></div>
+  </body>
+  <script>
+    const mixinA = {
+      mounted(){
+        console.log("mounted completed");
+      },
+    };
+
+    Vue.component("ComponentA", {
+      mixins:[mixinA],
+      data(){
+          return {
+            count:0
+          }
+      },
+      methods: {
+        handleClick(){
+            this.count++;
+        }
+      },
+      template: `
+            <div>
+                <hr>
+
+                ComponentA {{count}}
+                <button @click="handleClick">+</button>
+                <p>这个是强行手写的文本</p>
+
+                <hr>
+            </div>
+        `
+    });
+
+    Vue.component("ComponentB", {
+      mixins:[mixinA],
+      data(){
+          return {
+            count:0
+          }
+      },
+      methods: {
+        handleClick(){
+            this.count++;
+        }
+      },
+      template: `
+            <div>
+                <hr>
+
+                ComponentB {{count}}
+                <button @click="handleClick">+</button>
+                <p>这个是强行手写的文本</p>
+
+                <hr>
+            </div>
+        `
+    });
+
+    let app = new Vue({
+      el: "#App",
+      data: {
+        msg: "Hello World",
+        nice: "look this"
+      },
+      template: `
+            <div>{{msg}}
+                <ComponentA></ComponentA>
+                <ComponentB></ComponentB>
+            </div>
+        `,
+    });
+  </script>
+</html>
