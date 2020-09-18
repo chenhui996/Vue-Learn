@@ -1,4 +1,4 @@
-# 用vue搭建美食节项目
+# 用 vue 搭建美食节项目
 
 ## 技术栈
 
@@ -17,4 +17,18 @@
 ## 后端服务
 
 - node.js
+
+---
+
+#### 安装vue-cli
+
+```
+npm i -g @vue/cli
+```
+
+#### 创建项目
+
+```
+vue create <project-name>
+```
 
