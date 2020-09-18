@@ -1,1 +1,20 @@
 # 用vue搭建美食节项目
+
+## 技术栈
+
+- vue
+- vue-router
+- vuex
+
+## 脚手架
+
+- vue-cli
+
+## 请求库
+
+- axios
+
+## 后端服务
+
+- node.js
+
