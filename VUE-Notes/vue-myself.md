@@ -1,9 +1,9 @@
 # vue 个人学习总结笔记
 
 - 个人向：
-    - 学习笔记
-    - 收集个人觉得有价值的知识文档
-- 会不断迭代进github
+  - 学习笔记
+  - 收集个人觉得有价值的知识文档
+- 会不断迭代进 github
 
 ## vue 的优点
 
@@ -100,7 +100,145 @@
     - 由于每次返回的都是一个新对象（Object 的实例）;
   - 引用地址不同，则不会出现这个问题;
 
+## voe-router 本质
+
+- 一句话概况：
+  - 建立 url 与页面视图之间的关系;
+
+## vuex
+
+### 什么是 vuex
+
+- vuex 是专门为 vue 项目开发的一个状态管理工具(个人理解：store,对标 redux);
+  - 所谓状态，可以简单理解成变量;
+  - 管理就是存储;
+- vuex 可以理解成一个'大仓库'，存放我们的变量;
+
+### 为什么要使用 vuex
+
+- 比如说，我有个状态（变量），很多组件都要用到它;
+  - 这个状态（变量）的存储和读取等操作最好统一管理;
+- 这时，我们就需要一个大仓库:
+  - 放一些很多组件都要共享的变量;
+- 这就是我们 vuex 的作用：
+  - 存放共享的状态;
+  - 让所有的组件都能使用到它;
+- 而且还需要具有响应式：
+  - 数据改变页面需要响应它的改变;
+
+### 哪些状态需要放在 vuex 中
+
+- 一般来讲多个组件需要共享的状态都可以放在 vuex 中;
+- 但是并不是所有状态都往里面塞;
+- 要是下面几种情况:
+  - 用户的登录状态(token)，多个组件多个页面都会用到它;
+  - 购物车中的信息等等;
+
+## 使用 vuex
+
+### 安装 vuex
+
+- 使用插件:
+
+```js
+import vuex from "vuex";
+import Vue from "vue";
+Vue.use(vuex);
+```
+
+## vuex的几个核心概念
+
+### state
+
+- 这个地方就是存放状态（变量）的地方;
+- 那么问题我们的组件怎么使用共享的状态呢？
+- 刚刚调用Vue.use方法的时候:
+    - 实际上，会调用vuex.install方法;
+- 他会在Vue的原型对象prototype上:
+    - 绑定一个$store属性;
+- 会将这个创建的store实例赋值给这个属性;
+- 那他是怎么获取到这个store实例的呢?
+    - 因为在Vue实例中我们挂载了这个store实例
+    - 他就是通过options.store获取到这个store实例的：
+        - Vue.prototype.$store=根实例.options.store
+- 所有的组件都继承Vue的原型:
+    - 所以都会有$store属性;
+    - 那我们使用仓库中状态的方法就出来了：
+```js
+cpn.$store.state.变量名
+```
+
+#### 单一状态树
+
+- 这个概念就是说:
+    - 不要创建多个仓库来分类存储变量;
+    - 就创建一个仓库来存放状态;
+    - 因为创建多个仓库不方便'管理'和'维护';(和redux一样呢)
+
+### mutation
+
+- mutation的作用就是修改state的;(牢记)
+- 并且修改state的唯一途径就是提交mutation:
+    - mutation中定义一系列'方法'，对state进行修改;(记住，是用方法修改！！！)
+    - 并且这些方法'第一个参数'默认传入的就是state对象;(就是每次写方法的时候给的那个形参：state);
+        - 免得我们使用this获取:
+
+```js
+// 最简易模型
+// (个人建议：学习的时候不要死记某一个知识的复杂结构，可以选择记最建议模型，留个印象，然后需要复杂了，再去深入，提高效率，不要当愣头青)
+const store = new Vue.Store({
+    state:{
+        age:18
+    },
+    mutations:{
+        // 形参state，就代表了上面的state对象
+        add(state){
+            state.age++;
+        }
+    }
+});
+```
+
+#### 使用mutation
+
+- 通过.commit的形式
+```js
+cpn.$store.commit("add")//add是自定义方法
+```
+- 有点像$emit，第一个参数是自己的自定义事件;
+- 比如这里我在app.vue中使用了它:
+```html
+// 也是最简易模型
+<template>
+    <div>
+        cain的年龄：{{ $store.state.age }}
+        <button @click="handleAgeAdd">年龄加一岁</button>
+    </div>
+</template>
+
+<script>
+    export default {
+        name:"App",
+        methods: {
+            handleAgeAdd() {
+                this.$store.commit("add");
+            }
+        },
+    }
+</script>
+
+```
+
+### actions...
+
+- 留坑
+
+### getters...
+
+- 留坑
+
+### modules...
+
+- 留坑
 
 # 会随着本人学习的深入，持续迭代本笔记;
-
-
