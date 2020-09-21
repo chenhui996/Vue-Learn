@@ -146,88 +146,170 @@ import Vue from "vue";
 Vue.use(vuex);
 ```
 
-## vuex的几个核心概念
+## vuex 的几个核心概念
 
 ### state
 
 - 这个地方就是存放状态（变量）的地方;
 - 那么问题我们的组件怎么使用共享的状态呢？
-- 刚刚调用Vue.use方法的时候:
-    - 实际上，会调用vuex.install方法;
-- 他会在Vue的原型对象prototype上:
-    - 绑定一个$store属性;
-- 会将这个创建的store实例赋值给这个属性;
-- 那他是怎么获取到这个store实例的呢?
-    - 因为在Vue实例中我们挂载了这个store实例
-    - 他就是通过options.store获取到这个store实例的：
-        - Vue.prototype.$store=根实例.options.store
-- 所有的组件都继承Vue的原型:
-    - 所以都会有$store属性;
-    - 那我们使用仓库中状态的方法就出来了：
+- 刚刚调用 Vue.use 方法的时候:
+  - 实际上，会调用 vuex.install 方法;
+- 他会在 Vue 的原型对象 prototype 上:
+  - 绑定一个\$store 属性;
+- 会将这个创建的 store 实例赋值给这个属性;
+- 那他是怎么获取到这个 store 实例的呢?
+  - 因为在 Vue 实例中我们挂载了这个 store 实例
+  - 他就是通过 options.store 获取到这个 store 实例的：
+    - Vue.prototype.\$store=根实例.options.store
+- 所有的组件都继承 Vue 的原型:
+  - 所以都会有\$store 属性;
+  - 那我们使用仓库中状态的方法就出来了：
+
 ```js
-cpn.$store.state.变量名
+cpn.$store.state.变量名;
 ```
 
 #### 单一状态树
 
 - 这个概念就是说:
-    - 不要创建多个仓库来分类存储变量;
-    - 就创建一个仓库来存放状态;
-    - 因为创建多个仓库不方便'管理'和'维护';(和redux一样呢)
+  - 不要创建多个仓库来分类存储变量;
+  - 就创建一个仓库来存放状态;
+  - 因为创建多个仓库不方便'管理'和'维护';(和 redux 一样呢)
 
 ### mutation
 
-- mutation的作用就是修改state的;(牢记)
-- 并且修改state的唯一途径就是提交mutation:
-    - mutation中定义一系列'方法'，对state进行修改;(记住，是用方法修改！！！)
-    - 并且这些方法'第一个参数'默认传入的就是state对象;(就是每次写方法的时候给的那个形参：state);
-        - 免得我们使用this获取:
+- mutation 的作用就是修改 state 的;(牢记)
+- 并且修改 state 的唯一途径就是提交 mutation:
+  - mutation 中定义一系列'方法'，对 state 进行修改;(记住，是用方法修改！！！)
+  - 并且这些方法'第一个参数'默认传入的就是 state 对象;(就是每次写方法的时候给的那个形参：state);
+    - 免得我们使用 this 获取:
 
 ```js
 // 最简易模型
 // (个人建议：学习的时候不要死记某一个知识的复杂结构，可以选择记最建议模型，留个印象，然后需要复杂了，再去深入，提高效率，不要当愣头青)
 const store = new Vue.Store({
-    state:{
-        age:18
+  state: {
+    age: 18,
+  },
+  mutations: {
+    // 形参state，就代表了上面的state对象
+    add(state) {
+      state.age++;
     },
-    mutations:{
-        // 形参state，就代表了上面的state对象
-        add(state){
-            state.age++;
-        }
-    }
+  },
 });
 ```
 
-#### 使用mutation
+#### 使用 mutation
 
-- 通过.commit的形式
+- 通过.commit 的形式
+
 ```js
-cpn.$store.commit("add")//add是自定义方法
+cpn.$store.commit("add"); //add是自定义方法
 ```
-- 有点像$emit，第一个参数是自己的自定义事件;
-- 比如这里我在app.vue中使用了它:
+
+- 有点像\$emit，第一个参数是自己的自定义事件;
+- 比如这里我在 app.vue 中使用了它:
+
 ```html
-// 也是最简易模型
 <template>
-    <div>
-        cain的年龄：{{ $store.state.age }}
-        <button @click="handleAgeAdd">年龄加一岁</button>
-    </div>
+  <div>
+    cain的年龄：{{ $store.state.age }}
+    <button @click="handleAgeAdd">年龄加一岁</button>
+  </div>
 </template>
 
 <script>
-    export default {
-        name:"App",
-        methods: {
-            handleAgeAdd() {
-                this.$store.commit("add");
-            }
-        },
-    }
+  // 也是最简易模型
+  export default {
+    name: "App",
+    methods: {
+      handleAgeAdd() {
+        this.$store.commit("add");
+      },
+    },
+  };
 </script>
+```
+
+#### mutation 中的方法携带参数
+
+- 刚刚我们说了 mutation 中的方法第一个形参:
+  - 一定是传入仓库的 state 属性;
+  - 那如果我调用 mutation 的方法的时候:
+    - 我想传递参数怎么办呢？
+  - 比如说现在我们 mutations 中的 age 固定只能加一;
+    - 那我怎么让它可以加任意数字;
+    - 这个任意数字我想自己决定;
+
+##### 简单：我们再设置一个形参来接收参数就可以了\*\*
+
+- 携带参数分为两步:
+  定义方法的时候再设置一个形参，留个坑:
+
+```js
+const store = new Vue.Store({
+  state: {
+    age: 18,
+  },
+  mutations: {
+    // 形参state，就代表了上面的state对象
+    // 再给个形参，代表传递过来的第二参数
+    add(state, num) {
+      state.age = state.age + num;
+    },
+  },
+});
+```
+
+- 在提交方法的时候，将参数传入，类似这种:
+
+```js
+cpn.$store.commit("add", 5); //到时候这个5就赋值给了num
+```
+
+- will done
+
+#### mutation的提交风格
+
+- 其实mutation的提交存在两种形式:
+    - 第一种: this.$store.commit("add",num);
+        - 就是我们之前我们使用的那种形式;
+    - 第二种: commit传入一个对象：type属性，放方法名;
+```js
+// commit传入一个对象：type属性，放方法名;
+this.$store.commit({
+        type:"add",
+        num:num
+    })
 
 ```
+- 第二种形式有一个很特别的点要注意:
+    - mumation方法中的第二个形参是这个对象;
+        - 也就是说num=={type:"add",num:num};
+```js
+// 引用num
+const store = new Vue.Store({
+  state: {
+    age: 18,
+  },
+  mutations: {
+    add(state, num) {
+      state.age = state.age + num.num;
+    },
+  },
+});
+```
+
+#### matation的类型常量
+
+- 它的作用就是为了统一mutation中方法的名字;
+    - 就是你调用的时候可能命名aaa;
+    - 你使用的时候也应该是aaa;
+    - 要是我们不小心输入错了比如使用的时候输入了aaaa,那么commit就生效不了;
+- 所以这里就是为了'统一声明'和'使用时方法名字的一致性';
+...
+...
 
 ### actions...
 
