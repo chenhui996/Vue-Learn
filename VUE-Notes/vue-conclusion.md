@@ -93,6 +93,7 @@ export function fetchLogin({ username, password }) {
 #### post 更新数据
 
 ```js
+// fatch 拿着数据去请求后端
 export function uploadPhoto(file, onUploadProgress) {
   // FormData就是创建一个文件
   const formData = new FormData();
@@ -110,6 +111,10 @@ export function uploadPhoto(file, onUploadProgress) {
 
 ### 登陆界面调用 fetchLogin 的接口
 
+- 调用 fetchLogin:
+    - 即抓取了数据后:
+        - 通过axios的post方法将数据带给后端:
+            - 发起一个post请求
 - 目的：
   - 为了获得 token;
   - 然后将 token 存进 vuex 里的 state 进行保存;

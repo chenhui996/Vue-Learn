@@ -1,0 +1,41 @@
+.div_insights_box:hover {
+  background-color: #2f5596;
+  border-bottom: 4px solid rgba(47, 85, 150, 1);
+}
+
+.div_insights_box:hover p {
+  color: #fff;
+}
+
+.div_insights_box:hover i {
+  color: #fff;
+  margin-right: 15px;
+}
+
+.div_insights_box:hover .div_insights_bg {
+  width: 100%;
+  height: 100%;
+}
+
+.web_box_shadow {
+  box-shadow: rgba(204, 204, 204, 0.15) 0px 1px 10px 5px;
+}
+.nav_arrow_icon::after {
+  display: inline-block;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: normal;
+  font-stretch: normal;
+  line-height: 1;
+  font-family: FontAwesome;
+  font-size: inherit;
+  text-rendering: auto;
+  content: "\f106";
+  color: rgb(51, 51, 51);
+  margin-left: 4px;
+  transform: rotate(0deg) scale(1) translate(0%, 0%);
+  transition: All 0.3s ease;
+}
+.nav_arrow_icon::after:hover {
+    content: "\f107";
+  }
